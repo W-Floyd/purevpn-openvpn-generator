@@ -4,7 +4,7 @@ if [ -d './configs' ]; then
     rm -r './configs'
 fi
 
-pushd './servers/' || {
+pushd './servers/' &> /dev/null || {
     echo 'Servers not checked, exiting'
     exit 1
 }
@@ -13,6 +13,7 @@ pushd './servers/' || {
     grep -rlE '"TCP",".*"Available"'
     grep -rlE '"UDP",".*"Available"'
 ) | sort | uniq | while read -r __file; do
+    sed -e 's|.*/|    |' <<< "${__file%.*}"
     while read -r __line; do
         __proto="${__line% *}"
         __port="${__line/* /}"
@@ -25,7 +26,7 @@ UDP 53'
 
 done
 
-popd || {
+popd &> /dev/null || {
     echo 'Something horrible just happened.'
     exit 1
 }
