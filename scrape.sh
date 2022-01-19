@@ -9,7 +9,7 @@ __wpnonce="$(curl 'https://support.purevpn.com/vpn-servers' -s | grep -oE 'id="_
 echo 'Getting Page'
 curl -X POST -d 'action=load_servers_list' -d "_wpnonce=${__wpnonce}" 'https://support.purevpn.com/wp-admin/admin-ajax.php' >'page.html'
 
-__xml_inter="$(cat 'page.html' | sed '1,2d' | xq -x)"
+__xml_inter="$(cat 'page.html' | sed '1,2d')"
 
 xmllint --xpath "/table/tbody/tr[@class='parent']/td[@style='width:180px;']/text()" - <<<"${__xml_inter}" |
     sed -e 's/^ *//' -e 's/ *$//' -e '/^$/d' >countries.txt
